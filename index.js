@@ -17,23 +17,19 @@ const typeDefs = `
 const students = [];
 let idCount = 0;
 
-function getStudents() {
-  pool.query(
-    "SELECT id, first_name as firstname, last_name as lastname FROM students_student",
-    (err, res) => {
-      return res.rows;
-    }
-  );
+async function getStudents() {
+  const val = await pool.query("select id, first_name as firstname, last_name as lastname from students_student")
+  .then(p => p.rows)
+  .then(i => JSON.stringify(i))
+  .then(r => rows = r)
+return val;
 }
 
 const resolvers = {
   Query: {
-    students: () => {
-      console.log(students);
-      return students;
-    },
+    students: ()=> `await getStudents()`,
     student: (parent, args) => {
-      pool.query(
+      await pool.query(
         "SELECT id, first_name as firstname, last_name as lastname FROM students_student WHERE id = $1",
         [args.id],
         (err, res) => {
@@ -66,10 +62,5 @@ const server = new GraphQLServer({
 
 server.start(() => console.log("Server s running on localhost:4000"));
 
-pool.query("SELECT * FROM students_student WHERE id = $1", [1], (err, res) => {
-  if (err) {
-    throw err;
-  }
-
-  console.log("student:", res.rows[0]);
-});
+var ss = getStudents();
+console.log(ss);
