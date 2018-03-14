@@ -20,7 +20,7 @@ let idCount = 0;
 async function getStudents() {
   const val = await pool
     .query(
-      await "select id, first_name as firstname, last_name as lastname from students_student"
+      "select id, first_name as firstname, last_name as lastname from students_student"
     )
     .then(p => p.rows);
   return val;
@@ -29,7 +29,7 @@ async function getStudents() {
 async function getStudent(id) {
   const val = await pool
     .query(
-      await "select id, first_name as firstname, last_name as lastname from students_student where id = $1",
+      "select id, first_name as firstname, last_name as lastname from students_student where id = $1",
       [id]
     )
     .then(p => p.rows[0]);
