@@ -18,29 +18,22 @@ const students = [];
 let idCount = 0;
 
 async function getStudents() {
-  const val = await pool.query("select id, first_name as firstname, last_name as lastname from students_student")
-  .then(p => p.rows)
-  .then(i => JSON.stringify(i))
-  .then(r => rows = r)
-return val;
+  const val = await pool
+    .query(
+      "select id, first_name as firstname, last_name as lastname from students_student"
+    )
+    .then(p => p.rows)
+    // .then(i => JSON.stringify(i))
+    .then(r => (rows = r));
+  return val;
 }
 
 const resolvers = {
   Query: {
-    students: ()=> `await getStudents()`,
+    students: () => getStudents(),
     student: (parent, args) => {
-      await pool.query(
-        "SELECT id, first_name as firstname, last_name as lastname FROM students_student WHERE id = $1",
-        [args.id],
-        (err, res) => {
-          if (err) {
-            throw err;
-          }
-          return res.row;
-        }
-      );
+      students.find(student => student.id === args / id);
     }
-    // students.find(student => student.id === args / id)
   },
   Mutation: {
     createStudent: (parent, args) => {
